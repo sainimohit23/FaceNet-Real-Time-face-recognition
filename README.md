@@ -35,6 +35,9 @@ root folder
 5. Run `webcamFaceRecoMulti.py` to detect faces in real time.
 
 
+![ezgif com-crop](https://user-images.githubusercontent.com/26195811/50400751-2dc3f900-07af-11e9-98fa-673878396abc.gif)
+
+
 ## Refrences 
 * FaceNet: A Unified Embedding for Face Recognition and Clustering : https://arxiv.org/abs/1503.03832.
 * Deepface paper https://www.cs.toronto.edu/~ranzato/publications/taigman_cvpr14.pdf.
