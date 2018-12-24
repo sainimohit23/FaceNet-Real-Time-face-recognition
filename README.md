@@ -32,7 +32,7 @@ root folder
 
 4. Run `train_triplet.py` to train the model. Adjust parameters accordingly.
 
-5. Run `webcamFaceRecoMulti.py` to detect faces in real time.
+5. Run `webcamFaceRecoMulti.py` to recognize faces in real time.
 
 
 ![ezgif com-crop](https://user-images.githubusercontent.com/26195811/50400751-2dc3f900-07af-11e9-98fa-673878396abc.gif)
