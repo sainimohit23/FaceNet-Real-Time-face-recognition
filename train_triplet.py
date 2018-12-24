@@ -24,7 +24,8 @@ import keras
 from generator_utils import *
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 import time
-    
+
+# Triplet loss function
 def triplet_loss_v2(y_true, y_pred):
     positive, negative = y_pred[:,0,0], y_pred[:,1,0]
     margin = K.constant(0.35)
@@ -37,7 +38,7 @@ def euclidean_distance(vects):
     return dist
 
 
-
+# If pre trained model not found. Load original FaceNet model
 try:
     with open('bestmodel.txt', 'r') as file:
         best_model_path = file.read()
@@ -48,8 +49,10 @@ except FileNotFoundError:
     FRmodel = faceRecoModel(input_shape=(3, 96, 96))
     load_weights_from_FaceNet(FRmodel)
 
+# Setting layers non-trainable
 for layer in FRmodel.layers[0: 100]:
     layer.trainable  =  False
+
 
 # Model Structure
 input_shape=(3, 96, 96)

@@ -23,15 +23,18 @@ from generator_utils import *
 np.set_printoptions(threshold=np.nan)
 import keras
 
+# Load model path
 with open('bestmodel.txt', 'r') as file:
     best_model_path = file.read()
 
+# Triplet Loss function
 def triplet_loss_v2(y_true, y_pred):
     positive, negative = y_pred[:,0,0], y_pred[:,1,0]
     margin = K.constant(0.2)
     loss = K.mean(K.maximum(K.constant(0), positive - negative + margin))
     return loss
 
+# Loading trained model
 FRmodel = keras.models.load_model(best_model_path,custom_objects={'triplet_loss_v2': triplet_loss_v2})
 
 # =============================================================================
@@ -39,6 +42,8 @@ FRmodel = keras.models.load_model(best_model_path,custom_objects={'triplet_loss_
 # load_weights_from_FaceNet(FRmodel)
 # 
 # =============================================================================
+
+# Code to verify detected person
 def verify(image_path, identity, database, model):
     
     encoding = img_to_encoding(image_path, model, False)
@@ -100,13 +105,3 @@ while True:
 
 camera.release()
 cv2.destroyAllWindows()
-
-
-
-
-
-
-cv2.imshow('a',roi)
-cv2.waitKey(0)
-
-

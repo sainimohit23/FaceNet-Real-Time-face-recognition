@@ -2,14 +2,15 @@ import os
 import cv2
 import numpy as np
 
+# Path for positive and anchor images
+paths = {'person1' : "./cropped/person1/",
+        'person2' : "./cropped/person2/"}
+faces = ['person1', 'person2']
 
-paths = {'mohit' : "./cropped/mohit/",
-        'mummy' : "./cropped/mummy/"}
-faces = ['mohit', 'mummy']
 
-
-negPath = './cropped/myimages/'
+negPath = './cropped/myimages/' # Path of negative images
 negImages = []
+
 
 images = []
 for key in paths.keys():
@@ -31,6 +32,7 @@ for i in range(len(images)):
 negImages = np.array(negImages)
 
 
+# Generator with random person as positive and anchor. negImages as negative images.
 def batch_generator(batch_size = 64):
     while True:
         a= np.random.randint(0, len(images), 1)
@@ -45,6 +47,9 @@ def batch_generator(batch_size = 64):
         
         yield (x_data, np.zeros((batch_size, 2, 1)))
         
+
+# Generator with randomly selected person as positive and anchor. Other randomly selected person as negative examples.
+# Model will learn to differentiate between persons to be recognized.
 def batch_generator2(batch_size = 64):
     while True:
         a= np.random.randint(0, len(images), 1)
