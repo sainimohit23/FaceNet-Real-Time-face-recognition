@@ -34,9 +34,7 @@ root folder
 
 5. Run `webcamFaceRecoMulti.py` to recognize faces in real time.
 
-
-![ezgif com-crop](https://user-images.githubusercontent.com/26195811/50400751-2dc3f900-07af-11e9-98fa-673878396abc.gif)
-
+![ezgif com-resize](https://user-images.githubusercontent.com/26195811/50422107-10556480-086d-11e9-9016-e8886aca4140.gif)
 
 ## Refrences 
 * FaceNet: A Unified Embedding for Face Recognition and Clustering : https://arxiv.org/abs/1503.03832.
