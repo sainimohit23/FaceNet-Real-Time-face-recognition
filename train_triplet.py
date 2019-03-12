@@ -89,18 +89,12 @@ tripletModel = Model([anchor, anchorPositive, anchorNegative], stacked_dists, na
 tripletModel.compile(optimizer = 'adadelta', loss = triplet_loss_v2, metrics = ['accuracy'])
 
 
-
 gen = batch_generator(64)
 tripletModel.fit_generator(gen, epochs=10,steps_per_epoch=30,callbacks=[early_stopping, tensorboard])
 
 gen = batch_generator2(64)
 tripletModel.fit_generator(gen, epochs=10,steps_per_epoch=30,callbacks=[early_stopping, tensorboard])
 tripletModel.summary()
-
-
-
-
-
 
 
 # Freezing more layers
