@@ -36,6 +36,13 @@ root folder
 
 ![ezgif com-resize](https://user-images.githubusercontent.com/26195811/50422107-10556480-086d-11e9-9016-e8886aca4140.gif)
 
+
+## Note/Bugs I know:
+* Model is trained using triplet loss. According to experiments it is recommended to chose `positive`, `negative` and `anchor` images carefully/manually for better results. Here I used a generator which selects images for `positive`, `negative` and `anchor` randomly (I'm Lazy af). To know more about this I recommend you to watch [this](https://youtu.be/d2XB5-tuCWU?list=PLkDaE6sCZn6Gl29AoE31iwdVwSG-KnDzF) video.
+
+* While training the model it will show very low loss straight away from the beginning. Don't fall for that. I will later include some reliable metric to get idea of model's accuracy on data while training.
+
+
 ## Refrences 
 * FaceNet: A Unified Embedding for Face Recognition and Clustering : https://arxiv.org/abs/1503.03832.
 * Deepface paper https://www.cs.toronto.edu/~ranzato/publications/taigman_cvpr14.pdf.
