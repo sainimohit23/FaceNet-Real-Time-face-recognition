@@ -2,6 +2,8 @@
 
 My implementation for face recognition using FaceNet model and Triplet Loss.
 
+> [Medium post](https://medium.com/@mohitsaini_54300/train-facenet-with-triplet-loss-for-real-time-face-recognition-a39e2f4472c3)
+
 ### Dependencies
 * keras
 * numpy
