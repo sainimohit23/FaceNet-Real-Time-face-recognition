@@ -1,5 +1,7 @@
 # FaceNet-with-TripletLoss
 
+NOTE: I will update it later to make it little easier to use.
+
 My implementation for face recognition using FaceNet model and Triplet Loss.
 
 > [Medium post](https://medium.com/@mohitsaini_54300/train-facenet-with-triplet-loss-for-real-time-face-recognition-a39e2f4472c3)
@@ -36,7 +38,7 @@ root folder
 
 5. Run `webcamFaceRecoMulti.py` to recognize faces in real time.
 
-![ezgif com-resize](https://user-images.githubusercontent.com/26195811/50422107-10556480-086d-11e9-9016-e8886aca4140.gif)
+<!--- ![ezgif com-resize](https://user-images.githubusercontent.com/26195811/50422107-10556480-086d-11e9-9016-e8886aca4140.gif) --->
 
 
 ## Note:
