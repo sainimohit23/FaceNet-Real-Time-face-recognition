@@ -1,6 +1,6 @@
 # FaceNet-with-TripletLoss
 
-NOTE: I will update it later to make it little easier to use.
+NOTE: Code is not polished. I will update it later to make it little easier to use.
 
 My implementation for face recognition using FaceNet model and Triplet Loss.
 
