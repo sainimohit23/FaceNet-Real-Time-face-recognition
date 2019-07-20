@@ -47,6 +47,7 @@ example:
 ## Known issues:
 * The dataset must contain the images of atleast two different people.
 * Generator function might be slow when dataset has images of fewer number of people.
+* Code needs some refactoring.
 
 
 ## Note:
