@@ -39,7 +39,7 @@ example:
 
 3. Run `train_triplet.py` to train the model. Make changes in `parameters.py` to adjust training parameters.
 
-4. Run `webcamFaceRecoMulti.py` to recognize faces in real time.
+4. Run `webcamFaceRecoMulti.py` to recognize faces in real time. Note- Our dataset must have some images for this script to work.
 
 ![ezgif com-resize](https://user-images.githubusercontent.com/26195811/50422107-10556480-086d-11e9-9016-e8886aca4140.gif)
 
