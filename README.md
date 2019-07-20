@@ -1,7 +1,5 @@
 # FaceNet-with-TripletLoss
 
-NOTE: Don't use the code. The implementation is not correct. I will fix it in few days.
-
 
 My implementation for face recognition using FaceNet model and Triplet Loss.
 
@@ -17,7 +15,7 @@ My implementation for face recognition using FaceNet model and Triplet Loss.
 ### Usage
 1. Create a dataset of faces for each person and arrange them in below order.
 ```
-root folder  
+root folder 
 │
 └───Person 1
 │   │───IMG1
@@ -29,17 +27,26 @@ root folder
 |   |   ....
 ```
 
-2. Run `align_dataset_mtcnn.py` to align faces. This code is taken from [facenet](https://github.com/davidsandberg/facenet). Usage example:
 
-![screenshot_43](https://user-images.githubusercontent.com/26195811/50400027-990acc80-07a9-11e9-860c-a20ab53bc5a8.png)
+2. Run `align_dataset_mtcnn.py` to prepare our dataset for training. Run the following command:
 
-3. Edit `path` dictionary and `face` list in `generator_utils.py` according to your data.
+```python align_dataset_mtcnn.py ./YOUR_DIRECTIORY_CONTAINING_DATASET ./cropped```
 
-4. Run `train_triplet.py` to train the model. Adjust parameters accordingly.
+example:
 
-5. Run `webcamFaceRecoMulti.py` to recognize faces in real time.
+![Screenshot_99](https://user-images.githubusercontent.com/26195811/61582654-07025100-ab4b-11e9-9775-60125bfee825.png)
 
-<!--- ![ezgif com-resize](https://user-images.githubusercontent.com/26195811/50422107-10556480-086d-11e9-9016-e8886aca4140.gif) --->
+
+3. Run `train_triplet.py` to train the model. Make changes in `parameters.py` to adjust training parameters.
+
+4. Run `webcamFaceRecoMulti.py` to recognize faces in real time.
+
+![ezgif com-resize](https://user-images.githubusercontent.com/26195811/50422107-10556480-086d-11e9-9016-e8886aca4140.gif)
+
+
+## Known issues:
+* The dataset must contain the images of atleast two different people.
+* Generator function might be slow when dataset has images of fewer number of people.
 
 
 ## Note:
@@ -47,13 +54,9 @@ root folder
 
 * Model is trained using triplet loss. According to experiments it is recommended to chose `positive`, `negative` and `anchor` images carefully/manually for better results. Here I used a generator which selects images for `positive`, `negative` and `anchor` randomly (I'm Lazy af). To know more about this I recommend you to watch [this](https://youtu.be/d2XB5-tuCWU?list=PLkDaE6sCZn6Gl29AoE31iwdVwSG-KnDzF) video.
 
-* While training the model it will show very low loss straight away from the beginning. Don't fall for that. I will later include some reliable metric to get idea of model's accuracy on data while training.
-
 
 ## Refrences 
 * FaceNet: A Unified Embedding for Face Recognition and Clustering : https://arxiv.org/abs/1503.03832.
 * Deepface paper https://www.cs.toronto.edu/~ranzato/publications/taigman_cvpr14.pdf.
 * deeplearning.ai 's assignments.
-
-
-
+* https://github.com/davidsandberg/facenet
