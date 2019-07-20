@@ -1,0 +1,6 @@
+./cropped\ben\1.png 149 86 481 542
+./cropped\ben\2.png 39 18 187 202
+./cropped\ben\3.png 315 83 753 668
+./cropped\henry\1.png 39 17 177 196
+./cropped\henry\2.png 47 36 172 192
+./cropped\henry\3.png 145 85 459 490

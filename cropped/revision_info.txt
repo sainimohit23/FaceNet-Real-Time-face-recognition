@@ -1,0 +1,7 @@
+arguments: align_dataset_mtcnn.py ./images ./cropped
+--------------------
+tensorflow version: 1.11.0
+--------------------
+git hash: b'd42f070ac4b60b3620561d60b7b268e9225db60d'
+--------------------
+b''
