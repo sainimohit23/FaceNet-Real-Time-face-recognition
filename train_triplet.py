@@ -24,56 +24,47 @@ import keras
 from generator_utils import *
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 import time
+from parameters import *
 
-# Triplet loss function
-def triplet_loss_v2(y_true, y_pred):
-    positive, negative = y_pred[:,0,0], y_pred[:,1,0]
-    margin = K.constant(0.35)
-    loss = K.mean(K.maximum(K.constant(0), positive - negative + margin))
+def triplet_loss(y_true, y_pred, alpha = ALPHA):
+    anchor, positive, negative = y_pred[0], y_pred[1], y_pred[2]
+    pos_dist = tf.reduce_sum(tf.square(tf.subtract(anchor, positive)), axis=-1)
+    neg_dist = tf.reduce_sum(tf.square(tf.subtract(anchor, negative)), axis=-1)
+    basic_loss = tf.add(tf.subtract(pos_dist, neg_dist), alpha)
+    loss = tf.reduce_sum(tf.maximum(basic_loss, 0.0))
     return loss
 
-def euclidean_distance(vects):
-    x, y = vects
-    dist = K.sqrt(K.maximum(K.sum(K.square(x - y), axis=1, keepdims=True), K.epsilon()))
-    return dist
 
 
-# If pre trained model not found. Load original FaceNet model
-try:
+if os.path.exists("./bestmodel.txt"):
     with open('bestmodel.txt', 'r') as file:
         best_model_path = file.read()
-    FRmodel = keras.models.load_model(best_model_path, custom_objects={'triplet_loss_v2': triplet_loss_v2})
     
-except FileNotFoundError:
-    print('Saved model not found, loading FaceNet')
-    FRmodel = faceRecoModel(input_shape=(3, 96, 96))
+if os.path.exists(best_model_path):
+    ("Pre trained model found")
+    FRmodel = keras.models.load_model(best_model_path, custom_objects={'triplet_loss': triplet_loss})
+    
+else:
+    print('Saved model not found, loading untrained FaceNet')
+    FRmodel = faceRecoModel(input_shape=(3, IMAGE_SIZE, IMAGE_SIZE))
     load_weights_from_FaceNet(FRmodel)
 
-# Setting layers non-trainable
-for layer in FRmodel.layers[0: 100]:
+for layer in FRmodel.layers[0: LAYERS_TO_FREEZE]:
     layer.trainable  =  False
+    
+    
+input_shape=(3, IMAGE_SIZE, IMAGE_SIZE)
+A = Input(shape=input_shape, name = 'anchor')
+P = Input(shape=input_shape, name = 'anchorPositive')
+N = Input(shape=input_shape, name = 'anchorNegative')
 
-
-# Model Structure
-input_shape=(3, 96, 96)
-anchor = Input(shape=input_shape, name = 'anchor')
-anchorPositive = Input(shape=input_shape, name = 'anchorPositive')
-anchorNegative = Input(shape=input_shape, name = 'anchorNegative')
-
-anchorCode = FRmodel(anchor)
-anchorPosCode = FRmodel(anchorPositive)
-anchorNegCode = FRmodel(anchorNegative)
-
-
-positive_dist = Lambda(euclidean_distance, name='pos_dist')([anchorCode, anchorPosCode])
-negative_dist = Lambda(euclidean_distance, name='neg_dist')([anchorCode, anchorNegCode])
-stacked_dists = Lambda(lambda vects: K.stack(vects, axis=1), name='stacked_dists')([positive_dist, negative_dist])
-
-
+enc_A = FRmodel(A)
+enc_P = FRmodel(P)
+enc_N = FRmodel(N)
 
 
 # Callbacks
-early_stopping = EarlyStopping(monitor='loss', patience=1, min_delta=0.00005)
+early_stopping = EarlyStopping(monitor='loss', patience=5, min_delta=0.00005)
 STAMP = 'facenet_%d'%(len(paths)) 
 checkpoint_dir = './' + 'checkpoints/' + str(int(time.time())) + '/'
 
@@ -83,34 +74,13 @@ if not os.path.exists(checkpoint_dir):
 bst_model_path = checkpoint_dir + STAMP + '.h5'
 tensorboard = TensorBoard(log_dir=checkpoint_dir + "logs/{}".format(time.time()))
 
-
 # Model
-tripletModel = Model([anchor, anchorPositive, anchorNegative], stacked_dists, name='triple_siamese')
-tripletModel.compile(optimizer = 'adadelta', loss = triplet_loss_v2, metrics = ['accuracy'])
+tripletModel = Model(input=[A, P, N], output=[enc_A, enc_P, enc_N])
+tripletModel.compile(optimizer = 'adam', loss = triplet_loss)
 
-
-gen = batch_generator(64)
-tripletModel.fit_generator(gen, epochs=10,steps_per_epoch=30,callbacks=[early_stopping, tensorboard])
-
-gen = batch_generator2(64)
-tripletModel.fit_generator(gen, epochs=10,steps_per_epoch=30,callbacks=[early_stopping, tensorboard])
-tripletModel.summary()
-
-
-# Freezing more layers
-for layer in FRmodel.layers[0: 130]:
-    layer.trainable  =  False
-early_stopping = EarlyStopping(monitor='loss', patience=2, min_delta=0.0000001)
-
-gen = batch_generator(64)
-tripletModel.compile(optimizer = 'adadelta', loss = triplet_loss_v2, metrics = ['accuracy'])
-tripletModel.fit_generator(gen, epochs=10,steps_per_epoch=30,callbacks=[early_stopping, tensorboard])
-
-gen = batch_generator2(64)
-tripletModel.fit_generator(gen, epochs=10,steps_per_epoch=30,callbacks=[early_stopping, tensorboard])
-tripletModel.summary()
+gen = batch_generator(BATCH_SIZE)
+tripletModel.fit_generator(gen, epochs=NUM_EPOCHS,steps_per_epoch=STEPS_PER_EPOCH,callbacks=[early_stopping, tensorboard])
 
 FRmodel.save(bst_model_path)
-
 with open('bestmodel.txt','w') as file:
     file.write(bst_model_path)

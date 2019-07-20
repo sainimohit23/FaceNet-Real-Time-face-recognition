@@ -1,70 +1,49 @@
 import os
 import cv2
 import numpy as np
-
-# Path for positive and anchor images
-paths = {'person1' : "./cropped/person1/",
-        'person2' : "./cropped/person2/"}
-faces = ['person1', 'person2']
+from parameters import *
+import pickle
 
 
-negPath = './cropped/myimages/' # Path of negative images
-negImages = []
-
-
-images = []
+input_shape = (3, IMAGE_SIZE, IMAGE_SIZE)
+with open("./path_dict.p", 'rb') as f:
+    paths = pickle.load(f)
+    
+faces = []
+for key in paths.keys():
+    paths[key] = paths[key].replace("\\", "/")
+    faces.append(key)
+    
+images = {}
 for key in paths.keys():
     li = []
     for img in os.listdir(paths[key]):
-        img1 = cv2.imread(paths[key]+img)
+        img1 = cv2.imread(os.path.join(paths[key],img))
         img2 = img1[...,::-1]
         li.append(np.around(np.transpose(img2, (2,0,1))/255.0, decimals=12))
-    images.append(li)
+    images[key] = np.array(li)
 
-for img in os.listdir(negPath):
-    img1 = cv2.imread(negPath+img)
-    img2 = img1[...,::-1]
-    negImages.append(np.around(np.transpose(img2, (2,0,1))/255.0, decimals=12))
+
+def batch_generator(batch_size=16):
+    y_val = np.zeros((batch_size, 2, 1))
+    anchors = np.zeros((batch_size, input_shape[0], input_shape[1], input_shape[2]))
+    positives = np.zeros((batch_size, input_shape[0], input_shape[1], input_shape[2]))
+    negatives = np.zeros((batch_size, input_shape[0], input_shape[1], input_shape[2]))
     
-
-for i in range(len(images)):
-    images[i] = np.array(images[i])
-negImages = np.array(negImages)
-
-
-# Generator with random person as positive and anchor. negImages as negative images.
-def batch_generator(batch_size = 64):
     while True:
-        a= np.random.randint(0, len(images), 1)
-        pos = images[a[0]][np.random.choice(len(images[a[0]]), batch_size)]
-        neg = negImages[np.random.choice(len(negImages), batch_size)]
-        anc = images[a[0]][np.random.choice(len(images[a[0]]), batch_size)]
+        for i in range(batch_size):
+            positiveFace = faces[np.random.randint(len(faces))]
+            negativeFace = faces[np.random.randint(len(faces))]
+            while positiveFace == negativeFace:
+                negativeFace = faces[np.random.randint(len(faces))]
 
-        x_data = {'anchor': anc,
-                  'anchorPositive': pos,
-                  'anchorNegative': neg
+            positives[i] = images[positiveFace][np.random.randint(len(images[positiveFace]))]
+            anchors[i] = images[positiveFace][np.random.randint(len(images[positiveFace]))]
+            negatives[i] = images[negativeFace][np.random.randint(len(images[negativeFace]))]
+        
+        x_data = {'anchor': anchors,
+                  'anchorPositive': positives,
+                  'anchorNegative': negatives
                   }
         
-        yield (x_data, np.zeros((batch_size, 2, 1)))
-        
-
-# Generator with randomly selected person as positive and anchor. Other randomly selected person as negative examples.
-# Model will learn to differentiate between persons to be recognized.
-def batch_generator2(batch_size = 64):
-    while True:
-        a= np.random.randint(0, len(images), 1)
-        b= np.random.randint(0, len(images), 1)
-        while b==a:
-            b= np.random.randint(0, len(images), 1)
-            
-        pos = images[a[0]][np.random.choice(len(images[a[0]]), batch_size)]
-        neg = images[b[0]][np.random.choice(len(images[b[0]]), batch_size)]
-        anc = images[a[0]][np.random.choice(len(images[a[0]]), batch_size)]
-
-        x_data = {'anchor': anc,
-                  'anchorPositive': pos,
-                  'anchorNegative': neg
-                  }
-        
-        yield (x_data, np.zeros((batch_size, 2, 1)))
-    
+        yield (x_data, [y_val, y_val, y_val])

@@ -35,10 +35,13 @@ import facenet
 import detect_face
 import random
 from time import sleep
+import pickle
+from parameters import *
 
 def main(args):
     sleep(random.random())
     output_dir = os.path.expanduser(args.output_dir)
+    path_dict = {}
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     # Store some git revision info in a text file in the log directory
@@ -69,6 +72,7 @@ def main(args):
             random.shuffle(dataset)
         for cls in dataset:
             output_class_dir = os.path.join(output_dir, cls.name)
+            path_dict[cls.name] = output_class_dir
             if not os.path.exists(output_class_dir):
                 os.makedirs(output_class_dir)
                 if args.random_order:
@@ -136,6 +140,9 @@ def main(args):
                             
     print('Total number of images: %d' % nrof_images_total)
     print('Number of successfully aligned images: %d' % nrof_successfully_aligned)
+    
+    with open('path_dict.p', 'wb') as f:
+        pickle.dump(path_dict, f)
             
 
 def parse_arguments(argv):
@@ -144,7 +151,7 @@ def parse_arguments(argv):
     parser.add_argument('input_dir', type=str, help='Directory with unaligned images.')
     parser.add_argument('output_dir', type=str, help='Directory with aligned face thumbnails.')
     parser.add_argument('--image_size', type=int,
-        help='Image size (height, width) in pixels.', default=96)
+        help='Image size (height, width) in pixels.', default=IMAGE_SIZE)
     parser.add_argument('--margin', type=int,
         help='Margin for the crop around the bounding box (height, width) in pixels.', default=44)
     parser.add_argument('--random_order', 

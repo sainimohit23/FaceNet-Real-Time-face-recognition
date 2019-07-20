@@ -1,1 +1,0 @@
-./checkpoints/1545639361/facenet_2.h5
