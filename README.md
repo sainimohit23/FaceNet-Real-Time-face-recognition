@@ -44,8 +44,8 @@ example:
 ![ezgif com-resize](https://user-images.githubusercontent.com/26195811/50422107-10556480-086d-11e9-9016-e8886aca4140.gif)
 
 
-## Known issues:
-* The dataset must contain the images of atleast two different people.
+## Known issues/limitations:
+* The dataset must contain the images of atleast two different people to train the model. You can define your own generator function to train it for single person
 * Generator function might be slow when dataset has images of fewer number of people.
 * Code needs some refactoring.
 
