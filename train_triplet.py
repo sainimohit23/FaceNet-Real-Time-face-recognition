@@ -35,12 +35,12 @@ def triplet_loss(y_true, y_pred, alpha = ALPHA):
     return loss
 
 
-
+best_model_path=None
 if os.path.exists("./bestmodel.txt"):
     with open('bestmodel.txt', 'r') as file:
         best_model_path = file.read()
     
-if os.path.exists(best_model_path):
+if best_model_path != None and os.path.exists(best_model_path):
     ("Pre trained model found")
     FRmodel = keras.models.load_model(best_model_path, custom_objects={'triplet_loss': triplet_loss})
     
