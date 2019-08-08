@@ -1,7 +1,7 @@
 # FaceNet-with-TripletLoss
 
 
-My implementation for face recognition using FaceNet model and Triplet Loss. I like to implement different deep learning models architectures. I also like to read about applications and implementations of deep learning models. I have typed this code in my free time as a self learning exercise. So, I you run into some performane issue, i am not an expert , i won't be able to help you. I also don't have hardware to extensively test a heavy model like FaceNet. So, hyperparameters are not tuned at all. Only thing I can assure you is that this implementation works.
+My implementation for face recognition using FaceNet model and Triplet Loss. I like to implement different deep learning models architectures. I also like to read about applications and implementations of deep learning models. I have typed this code in my free time as a self learning exercise. So, if you run into some performane issue, i am not an expert , i won't be able to help you. I also don't have hardware to extensively test a heavy model like FaceNet. So, hyperparameters are not tuned at all. Only thing I can assure you is that this implementation works.
 
 
 > [Medium post](https://medium.com/@mohitsaini_54300/train-facenet-with-triplet-loss-for-real-time-face-recognition-a39e2f4472c3)
