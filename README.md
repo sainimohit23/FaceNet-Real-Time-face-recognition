@@ -8,7 +8,7 @@ My implementation for face recognition using FaceNet model and Triplet Loss. I l
 
 ### Dependencies
 * python 3.6
-* tensorflow (version >= 1.11)
+* tensorflow v1.11
 * keras
 * openCV
 
